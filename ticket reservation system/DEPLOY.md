@@ -23,14 +23,18 @@ Ensure you have the following environment variables set in your deployment platf
 ## Deployment Instructions (Generic)
 1. Push this code to GitHub.
 2. Connect your repository to a hosting service (e.g., Render.com Web Service).
-3. Set the **Build Command** to:
+3. **Important**: Since the application source code is in a subdirectory (`ticket reservation system`), you MUST set the **Root Directory** setting in your deployment service to:
+   ```text
+   ticket reservation system
+   ```
+4. Set the **Build Command** to:
    ```bash
    npm install && npm run build
    ```
-4. Set the **Start Command** to:
+5. Set the **Start Command** to:
    ```bash
    npm start
    ```
-5. Add your `MONGO_URI` in the Environment Variables settings.
+6. Add your `MONGO_URI` in the Environment Variables settings.
 
 The server is configured to serve `index.html` for any unknown routes, enabling React Client-Side Routing.
