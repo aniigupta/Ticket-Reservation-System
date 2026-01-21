@@ -163,6 +163,7 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// app.get('*', (req, res) => {
-//     res.send('Ticket Reservation System API - Use /api endpoints or access the frontend');
-// });
+// specific handling for React's client-side routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+});
