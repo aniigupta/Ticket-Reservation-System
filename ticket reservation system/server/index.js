@@ -11,7 +11,7 @@ dotenv.config({ path: '../.env' }); // Load from parent directory
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ticket_db';
+const MONGO_URI = process.env.MONGO_URI;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -69,24 +69,38 @@ let mockEvent = {
 };
 
 // Connect to MongoDB
-mongoose.connect(MONGO_URI)
-    .then(() => {
-        console.log('MongoDB Connected');
-        seedData();
-    })
-    .catch(err => {
-        console.error('MongoDB Connection Error:', err);
-        console.log('------------------------------------------------');
-        console.log('WARNING: Switching to IN-MEMORY MOCK MODE.');
-        console.log('Data will NOT be persisted/saved to a database.');
-        console.log('------------------------------------------------');
-        useMockData = true;
+// Connect to MongoDB
+if (!MONGO_URI) {
+    console.log('------------------------------------------------');
+    console.log('NOTICE: No MONGO_URI environment variable found.');
+    console.log('Starting in IN-MEMORY MOCK MODE immediately.');
+    console.log('------------------------------------------------');
+    useMockData = true;
 
-        // Randomly occupy some seats in mock data for realism
-        mockEvent.seats.forEach(seat => {
-            if (Math.random() < 0.2) seat.status = 'occupied';
-        });
+    // Initialize mock data
+    mockEvent.seats.forEach(seat => {
+        if (Math.random() < 0.2) seat.status = 'occupied';
     });
+} else {
+    mongoose.connect(MONGO_URI)
+        .then(() => {
+            console.log('MongoDB Connected');
+            seedData();
+        })
+        .catch(err => {
+            console.error('MongoDB Connection Error:', err);
+            console.log('------------------------------------------------');
+            console.log('WARNING: Switching to IN-MEMORY MOCK MODE.');
+            console.log('Data will NOT be persisted/saved to a database.');
+            console.log('------------------------------------------------');
+            useMockData = true;
+
+            // Randomly occupy some seats in mock data for realism
+            mockEvent.seats.forEach(seat => {
+                if (Math.random() < 0.2) seat.status = 'occupied';
+            });
+        });
+}
 
 // Seed Data
 const seedData = async () => {
