@@ -22,6 +22,43 @@ app.use(bodyParser.json());
 // Serve static files from the React frontend app
 app.use(express.static(path.join(process.cwd(), 'dist')));
 
+// Constants for Seeding
+const SEAT_CATEGORIES = {
+    VIP: { id: 'vip', name: 'VIP', price: 500 },
+    PREMIUM: { id: 'premium', name: 'Premium', price: 300 },
+    NORMAL: { id: 'normal', name: 'Normal', price: 150 },
+};
+
+const createRow = (id, count, category, startIdx = 1) => {
+    return Array.from({ length: count }, (_, i) => ({
+        id: `${id}${startIdx + i}`,
+        row: id,
+        number: startIdx + i,
+        category: category.id,
+        status: 'available', // Default to available for persistent storage
+        price: category.price
+    }));
+};
+
+const INITIAL_SEAT_LAYOUT = [
+    ...createRow('A', 8, SEAT_CATEGORIES.VIP),
+    ...createRow('B', 8, SEAT_CATEGORIES.VIP),
+    ...createRow('C', 10, SEAT_CATEGORIES.PREMIUM),
+    ...createRow('D', 10, SEAT_CATEGORIES.PREMIUM),
+    ...createRow('E', 12, SEAT_CATEGORIES.NORMAL),
+    ...createRow('F', 12, SEAT_CATEGORIES.NORMAL),
+    ...createRow('G', 12, SEAT_CATEGORIES.NORMAL),
+];
+
+const MOVIE_INFO = {
+    title: "Inception: Re-Release",
+    time: "Today, 19:30",
+    theater: "IMAX 4D, Downtown",
+    screen: "Screen 1",
+    language: "English",
+    certification: "UA"
+};
+
 // ---------------------------------------------------------
 // MOCK DATA STORE (Fallback if no DB)
 // ---------------------------------------------------------
@@ -51,9 +88,30 @@ mongoose.connect(MONGO_URI)
         });
     });
 
-// Constants for Seeding are above (already defined)
-
-// ... (keep seedData function as is, it simply won't be called if connection fails)
+// Seed Data
+const seedData = async () => {
+    try {
+        const count = await Event.countDocuments();
+        console.log('Current event count:', count);
+        if (count === 0) {
+            console.log('Seeding initial data...');
+            const event = new Event({
+                ...MOVIE_INFO,
+                seats: INITIAL_SEAT_LAYOUT
+            });
+            // Randomly occupy some seats for realism
+            event.seats.forEach(seat => {
+                if (Math.random() < 0.2) seat.status = 'occupied';
+            });
+            await event.save();
+            console.log('Data seeded successfully.');
+        } else {
+            console.log('Database already has data.');
+        }
+    } catch (err) {
+        console.error('Error seeding data:', err);
+    }
+};
 
 // Helper: Format seats into rows (Shared logic)
 const formatSeatsForFrontend = (seatList) => {
