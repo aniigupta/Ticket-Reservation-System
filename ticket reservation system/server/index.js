@@ -164,6 +164,6 @@ app.listen(PORT, () => {
 });
 
 // specific handling for React's client-side routing
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
