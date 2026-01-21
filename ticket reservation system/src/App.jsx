@@ -17,11 +17,15 @@ function App() {
   const fetchSeats = async () => {
     try {
       const response = await fetch('/api/seats');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setSeatLayout(data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching seats:', error);
+      setSeatLayout([]); // Verify we don't crash with null/error obj
       setLoading(false);
     }
   };
