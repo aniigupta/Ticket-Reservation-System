@@ -24,8 +24,11 @@ app.use(express.static(path.join(process.cwd(), 'dist')));
 
 // Connect to MongoDB
 mongoose.connect(MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error(err));
+    .then(() => {
+        console.log('MongoDB Connected');
+        seedData();
+    })
+    .catch(err => console.error('MongoDB Connection Error:', err));
 
 // Constants for Seeding
 const SEAT_CATEGORIES = {
@@ -66,22 +69,28 @@ const MOVIE_INFO = {
 
 // Seed Data
 const seedData = async () => {
-    const count = await Event.countDocuments();
-    if (count === 0) {
-        console.log('Seeding initial data...');
-        const event = new Event({
-            ...MOVIE_INFO,
-            seats: INITIAL_SEAT_LAYOUT
-        });
-        // Randomly occupy some seats for realism
-        event.seats.forEach(seat => {
-            if (Math.random() < 0.2) seat.status = 'occupied';
-        });
-        await event.save();
-        console.log('Data seeded.');
+    try {
+        const count = await Event.countDocuments();
+        console.log('Current event count:', count);
+        if (count === 0) {
+            console.log('Seeding initial data...');
+            const event = new Event({
+                ...MOVIE_INFO,
+                seats: INITIAL_SEAT_LAYOUT
+            });
+            // Randomly occupy some seats for realism
+            event.seats.forEach(seat => {
+                if (Math.random() < 0.2) seat.status = 'occupied';
+            });
+            await event.save();
+            console.log('Data seeded successfully.');
+        } else {
+            console.log('Database already has data.');
+        }
+    } catch (err) {
+        console.error('Error seeding data:', err);
     }
 };
-seedData();
 
 // Routes
 app.get('/api/seats', async (req, res) => {
