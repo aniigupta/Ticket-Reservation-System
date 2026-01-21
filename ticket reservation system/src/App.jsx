@@ -16,7 +16,7 @@ function App() {
 
   const fetchSeats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/seats');
+      const response = await fetch('/api/seats');
       const data = await response.json();
       setSeatLayout(data);
       setLoading(false);
