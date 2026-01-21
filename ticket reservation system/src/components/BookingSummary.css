@@ -1,0 +1,95 @@
+.booking-summary {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--surface-color);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.summary-details h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.summary-info {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.selected-list {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.summary-tag {
+    background: var(--bg-color);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.total-action {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.total-price {
+    text-align: right;
+}
+
+.total-price span {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.total-price h2 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+}
+
+.book-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.book-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+.book-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--surface-hover);
+    box-shadow: none;
+}

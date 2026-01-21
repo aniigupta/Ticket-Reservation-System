@@ -1,0 +1,49 @@
+.seat {
+    width: 32px;
+    height: 32px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: var(--seat-available);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.seat:hover:not(.occupied) {
+    transform: scale(1.1);
+    background-color: var(--seat-available-hover);
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+.seat.vip {
+    border-top: 2px solid var(--price-vip);
+}
+
+.seat.premium {
+    border-top: 2px solid var(--price-premium);
+}
+
+.seat.normal {
+    border-top: 2px solid var(--price-normal);
+}
+
+.seat.selected {
+    background-color: var(--seat-selected);
+    box-shadow: 0 0 15px var(--seat-selected);
+    border-color: transparent;
+    transform: scale(1.1);
+}
+
+.seat.occupied {
+    background-color: var(--seat-occupied);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Add a little generic glow for high tier seats if available */
+.seat.vip:not(.occupied):not(.selected) {
+    box-shadow: 0 0 5px rgba(251, 191, 36, 0.2);
+}
